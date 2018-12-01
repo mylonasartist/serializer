@@ -1,7 +1,9 @@
 package types;
 
 public class Stateless {
-    private int n;
+
+    // made public unit testing purposes
+    public static long serialVersionUID = 12;
 
     @Override
     public boolean equals(Object o) {
