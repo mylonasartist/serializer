@@ -19,11 +19,11 @@ Class -> name:String version:long
 
 String -> lengthBytes:int value(UTF-8)
 
-Field -> name:String Value // we serialize name of the field because Javadoc says: "The elements in the returned array are not sorted and are not in any particular order"
+Field -> name:String Value // we serialize name of the field because Javadoc says for Class.getDeclaredFields(): "The elements in the returned array are not sorted and are not in any particular order"
 
-Value -> isNull:int [type:ValueType Object | Array | String | Byte | Short | Int | Long | ... | BigDecimal | BigInteger | Date]
+Value -> isNull:int [type:ValueType Object | Array | String | Byte | Short | Integer | Long | ... | BigDecimal | BigInteger | Date]
 
-ValueType -> OBJECT | ARRAY | STRING | BYTE | SHORT | PBYTE | PSHORT | ... | BIGDECIMAL | BIGINTEGER | DATE
+ValueType -> OBJECT | ARRAY | STRING | BYTE | SHORT | INTEGER | LONG | FLOAT | DOUBLE | BOOLEAN | BIGDECIMAL | BIGINTEGER | DATE
 
 Array -> length:int Class [ Value[] ]
  
