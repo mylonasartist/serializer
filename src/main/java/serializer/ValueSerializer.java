@@ -5,10 +5,9 @@ import org.apache.commons.lang3.ClassUtils;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.*;
 
 public class ValueSerializer implements ISerializer<Object> {
     private static final ValueSerializer instance = new ValueSerializer();
@@ -30,6 +29,9 @@ public class ValueSerializer implements ISerializer<Object> {
         valueSerializersMap.put(ValueType.ARRAY, new ArraySerializer());
         valueSerializersMap.put(ValueType.COLLECTION, new CollectionSerializer());
         valueSerializersMap.put(ValueType.MAP, new MapSerializer());
+        valueSerializersMap.put(ValueType.DATE, new DateSerializer());
+        valueSerializersMap.put(ValueType.BIGDECIMAL, new BigDecimalSerializer());
+        valueSerializersMap.put(ValueType.BIGINTEGER, new BigIntegerSerializer());
 
         valueTypesMap.put(String.class, ValueType.STRING);
         valueTypesMap.put(Long.class, ValueType.LONG);
@@ -39,6 +41,9 @@ public class ValueSerializer implements ISerializer<Object> {
         valueTypesMap.put(Float.class, ValueType.FLOAT);
         valueTypesMap.put(Double.class, ValueType.DOUBLE);
         valueTypesMap.put(Boolean.class, ValueType.BOOLEAN);
+        valueTypesMap.put(Date.class, ValueType.DATE);
+        valueTypesMap.put(BigDecimal.class, ValueType.BIGDECIMAL);
+        valueTypesMap.put(BigInteger.class, ValueType.BIGINTEGER);
 
         // TODO add more primitive and wrapper types to valueTypesMap
 
@@ -284,6 +289,47 @@ public class ValueSerializer implements ISerializer<Object> {
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 throw new SerializationException("Cannot create Map instance of class: " + mapClass.getName());
             }
+        }
+    }
+
+    private static class DateSerializer implements ISerializer<Date> {
+
+        @Override
+        public void serialize(Date date, OutputStream output) throws IOException, SerializationException {
+            new DataOutputStream(output).writeLong(date.getTime());
+        }
+
+        @Override
+        public Date deserialize(InputStream input) throws IOException, SerializationException {
+            return new Date(new DataInputStream(input).readLong());
+        }
+    }
+
+    private static class BigDecimalSerializer implements ISerializer<BigDecimal> {
+
+        @Override
+        public void serialize(BigDecimal value, OutputStream output) throws IOException, SerializationException {
+            new DataOutputStream(output).writeUTF(value.toEngineeringString());
+        }
+
+        @Override
+        public BigDecimal deserialize(InputStream input) throws IOException, SerializationException {
+            return new BigDecimal(new DataInputStream(input).readUTF());
+        }
+    }
+
+    private static class BigIntegerSerializer implements ISerializer<BigInteger> {
+
+        @Override
+        public void serialize(BigInteger value, OutputStream output) throws IOException, SerializationException {
+            byte[] valueContents = value.toByteArray();
+            ValueSerializer.getInstance().serialize(valueContents, output);
+        }
+
+        @Override
+        public BigInteger deserialize(InputStream input) throws IOException, SerializationException {
+            byte[] valueContents = (byte[]) ValueSerializer.getInstance().deserialize(input);
+            return new BigInteger(valueContents);
         }
     }
 }

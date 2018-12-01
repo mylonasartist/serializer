@@ -4,6 +4,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import types.*;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
+
 public class ObjectSerializerTest {
     @Test
     public void testStatelessObjectSerialization() {
@@ -46,6 +50,24 @@ public class ObjectSerializerTest {
     @Test
     public void testFinalFieldSerialization() {
         WithFinalField obj = new WithFinalField("honest JWT token: hhhh.eeeeee.ttttt");
+        testObjectSerialization(obj);
+    }
+
+    @Test
+    public void testDateSerialization() {
+        Date obj = new Date();
+        testObjectSerialization(obj);
+    }
+
+    @Test
+    public void testBigDecimal() {
+        BigDecimal obj = new BigDecimal("382934.892839284");
+        testObjectSerialization(obj);
+    }
+
+    @Test
+    public void testBigInteger() {
+        BigInteger obj = new BigInteger("12391293921");
         testObjectSerialization(obj);
     }
 }
