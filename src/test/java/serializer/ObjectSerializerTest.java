@@ -42,4 +42,10 @@ public class ObjectSerializerTest {
         obj.complexObjSuper.message = "HHHHOOOOOoooooo";
         testObjectSerialization(obj);
     }
+
+    @Test
+    public void testFinalFieldSerialization() {
+        WithFinalField obj = new WithFinalField("honest JWT token: hhhh.eeeeee.ttttt");
+        testObjectSerialization(obj);
+    }
 }

@@ -1,7 +1,11 @@
 package serializer;
 
+import org.apache.commons.lang3.ClassUtils;
+
 import java.io.*;
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +27,8 @@ public class ValueSerializer implements ISerializer<Object> {
         valueSerializersMap.put(ValueType.DOUBLE, new DoubleSerializer());
         valueSerializersMap.put(ValueType.BOOLEAN, new BooleanSerializer());
         valueSerializersMap.put(ValueType.ARRAY, new ArraySerializer());
+        valueSerializersMap.put(ValueType.COLLECTION, new CollectionSerializer());
+        valueSerializersMap.put(ValueType.MAP, new MapSerializer());
 
         valueTypesMap.put(String.class, ValueType.STRING);
         valueTypesMap.put(Long.class, ValueType.LONG);
@@ -69,6 +75,10 @@ public class ValueSerializer implements ISerializer<Object> {
         ValueType valueType;
         if (valueClass.isArray()) {
             valueType = ValueType.ARRAY;
+        } else if (ClassUtils.isAssignable(valueClass, Map.class)) {
+            valueType = ValueType.MAP;
+        } else if (ClassUtils.isAssignable(valueClass, Collection.class)) {
+            valueType = ValueType.COLLECTION;
         } else if (valueTypesMap.containsKey(valueClass)) {
             valueType = valueTypesMap.get(valueClass);
         } else {
@@ -209,6 +219,50 @@ public class ValueSerializer implements ISerializer<Object> {
                 Array.set(array, i, element);
             }
             return array;
+        }
+    }
+
+    private static class CollectionSerializer implements ISerializer<Collection> {
+
+        @Override
+        public void serialize(Collection collection, OutputStream output) throws IOException, SerializationException {
+            output.write(collection.size());
+            ClassSerializer.getInstance().serialize(collection.getClass(), output);
+            for (Object item: collection) {
+                ValueSerializer.getInstance().serialize(item, output);
+            }
+        }
+
+        @Override
+        public Collection deserialize(InputStream input) throws IOException, SerializationException {
+            int size = input.read();
+            Class collectionClass = ClassSerializer.getInstance().deserialize(input);
+            Collection collection;
+            try {
+                // TODO consider create class like InstantiationHelper for instances
+                // TODO creation - finding ctors, best effort logic, exception handling, etc.
+                collection = (Collection) collectionClass.getConstructor().newInstance();
+                for (int i = 0; i < size; i++) {
+                    Object item = ValueSerializer.getInstance().deserialize(input);
+                    collection.add(item);
+                }
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                throw new SerializationException("Cannot create Collection instance of class: " + collectionClass.getName());
+            }
+            return collection;
+        }
+    }
+
+    private static class MapSerializer implements ISerializer<Map> {
+
+        @Override
+        public void serialize(Map value, OutputStream output) throws IOException, SerializationException {
+
+        }
+
+        @Override
+        public Map deserialize(InputStream input) throws IOException, SerializationException {
+            return null;
         }
     }
 }
