@@ -21,7 +21,7 @@ Class -> name:String version:long
 
 String -> lengthBytes:int value(UTF-8)
 
-Field -> name:String Value // we serialize name of the field because Javadoc says for Class.getDeclaredFields(): "The elements in the returned array are not sorted and are not in any particular order"
+Field -> Value
 
 Value -> isNull:int [type:ValueType Object | Array | Collection | Map | String | Byte | Short | Integer | Long | Float | Double | Boolean | BigDecimal | BigInteger | Date]
 

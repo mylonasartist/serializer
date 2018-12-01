@@ -44,11 +44,11 @@ class ObjectSerializer implements ISerializer<Object> {
 
     private void serializeFields(Object obj, Class clazz, OutputStream output) throws IOException, SerializationException {
         Field[] fields = clazz.getDeclaredFields();
+        Arrays.sort(fields, Comparator.comparing(Field::getName));
 
         if (fields != null) {
             for (int i = 0; i < fields.length; i++) {
                 fields[i].setAccessible(true);
-                StringSerializer.getInstance().serialize(fields[i].getName(), output);
                 try {
                     Object fieldValue = fields[i].get(obj);
                     ValueSerializer.getInstance().serialize(fieldValue, output);
@@ -98,19 +98,18 @@ class ObjectSerializer implements ISerializer<Object> {
 
     private void deserializeFields(Object obj, Class clazz, InputStream input) throws IOException, SerializationException {
         Field[] fields = clazz.getDeclaredFields();
+        Arrays.sort(fields, Comparator.comparing(Field::getName));
         if (fields != null) {
-            Map<String, Field> fieldsMap = new HashMap<>(fields.length);
-            Arrays.stream(fields).forEach(field -> fieldsMap.put(field.getName(), field));
             for (int i = 0; i < fields.length; i++) {
-                deserializeField(obj, clazz, input, fieldsMap);
+                deserializeField(obj, clazz, input, fields[i]);
             }
         }
     }
 
-    private void deserializeField(Object obj, Class clazz, InputStream input, Map<String, Field> fieldsMap) throws IOException, SerializationException {
-        String fieldName = StringSerializer.getInstance().deserialize(input);
+    private void deserializeField(Object obj, Class clazz, InputStream input, Field field)
+            throws IOException, SerializationException {
+        String fieldName = field.getName();
         Object value = ValueSerializer.getInstance().deserialize(input);
-        Field field = fieldsMap.get(fieldName);
         int modifiers = field.getModifiers();
         if (!Modifier.isStatic(modifiers) || !Modifier.isFinal(modifiers)) {
             field.setAccessible(true);
