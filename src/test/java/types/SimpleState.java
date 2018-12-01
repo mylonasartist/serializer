@@ -3,7 +3,7 @@ package types;
 import java.util.Objects;
 
 public class SimpleState {
-    private int n = 5;
+    public int n = 5;
 
     @Override
     public boolean equals(Object o) {

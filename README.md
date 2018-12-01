@@ -13,7 +13,7 @@ Example of usage:
 
 **Grammar:**
 
-Object -> Class [ Field[] ]
+Object -> Class [ Field[] ] [ Field[] foreach superclass ... until currentSuperclass == java.lang.Object ]
 
 Class -> name:String version:long
 
@@ -30,11 +30,6 @@ Array -> length:int Class [ Value[] ]
 
 **TODO:**
 - Resolve all TODOs
-- Write serializer version into the serialization result. When deserializing - throw exception when serializer version is not compatible.
-- Take into account inherited state - i.e. fields from superclass.
-  The grammar for Object will be like:
-  
-  Object -> Class [ Field[] ] [ Class Field[] ... until Class == java.lang.Object]
 - Provide setting of final fields on Object.
 - Provide support of multidimensional arrays.
 

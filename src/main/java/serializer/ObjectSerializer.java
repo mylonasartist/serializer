@@ -1,13 +1,14 @@
 package serializer;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ClassUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 class ObjectSerializer implements ISerializer<Object> {
 
@@ -27,9 +28,18 @@ class ObjectSerializer implements ISerializer<Object> {
             throw new SerializationException("Cannot serialize null reference");
         }
         Class clazz = obj.getClass();
-        ClassSerializer.getInstance().serialize(clazz, output);
+        ClassSerializer classSerializer = ClassSerializer.getInstance();
+        classSerializer.serialize(clazz, output);
 
         serializeFields(obj, clazz, output);
+
+        List<Class<?>> superclasses = ClassUtils.getAllSuperclasses(clazz);
+        Iterator<Class<?>> classIterator = superclasses.iterator();
+
+        Class<?> currentSuperclass;
+        while (classIterator.hasNext() && (currentSuperclass = classIterator.next()) != Object.class ) {
+            serializeFields(obj, currentSuperclass, output);
+        }
     }
 
     private void serializeFields(Object obj, Class clazz, OutputStream output) throws IOException, SerializationException {
@@ -51,10 +61,19 @@ class ObjectSerializer implements ISerializer<Object> {
 
     @Override
     public Object deserialize(InputStream input) throws IOException, SerializationException {
-        Class clazz = ClassSerializer.getInstance().deserialize(input);
+        ClassSerializer classSerializer = ClassSerializer.getInstance();
+        Class clazz = classSerializer.deserialize(input);
         try {
             Object obj = clazz.getConstructor().newInstance();
             deserializeFields(obj, clazz, input);
+
+            List<Class<?>> superclasses = ClassUtils.getAllSuperclasses(clazz);
+            Iterator<Class<?>> classIterator = superclasses.iterator();
+
+            Class<?> currentSuperclass;
+            while (classIterator.hasNext() && (currentSuperclass = classIterator.next()) != Object.class ) {
+                deserializeFields(obj, currentSuperclass, input);
+            }
             return obj;
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new SerializationException("Cannot create object of class: " + clazz.getName(), e);

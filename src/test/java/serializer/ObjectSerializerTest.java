@@ -2,9 +2,7 @@ package serializer;
 
 import org.junit.Assert;
 import org.junit.Test;
-import types.SimpleComplexState;
-import types.SimpleState;
-import types.Stateless;
+import types.*;
 
 public class ObjectSerializerTest {
     @Test
@@ -26,12 +24,22 @@ public class ObjectSerializerTest {
     @Test
     public void testSimpleStateObjectSerialization() {
         SimpleState obj = new SimpleState();
+        obj.n = 900;
         testObjectSerialization(obj);
     }
 
     @Test
-    public void testSimpleComplextStateObjectSerialization() {
-        SimpleComplexState obj = new SimpleComplexState();
+    public void testComplextStateObjectSerialization() {
+        ComplexState obj = new ComplexState();
+        obj.boo = false;
+        obj.obj.n = 1001;
+        testObjectSerialization(obj);
+    }
+
+    @Test
+    public void testInheritanceStateSerialization() {
+        Subclass obj = new Subclass();
+        obj.complexObjSuper.message = "HHHHOOOOOoooooo";
         testObjectSerialization(obj);
     }
 }
