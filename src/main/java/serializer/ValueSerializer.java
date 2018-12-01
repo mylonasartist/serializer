@@ -7,6 +7,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class ValueSerializer implements ISerializer<Object> {
@@ -237,32 +238,52 @@ public class ValueSerializer implements ISerializer<Object> {
         public Collection deserialize(InputStream input) throws IOException, SerializationException {
             int size = input.read();
             Class collectionClass = ClassSerializer.getInstance().deserialize(input);
-            Collection collection;
             try {
                 // TODO consider create class like InstantiationHelper for instances
                 // TODO creation - finding ctors, best effort logic, exception handling, etc.
-                collection = (Collection) collectionClass.getConstructor().newInstance();
+                Collection collection = (Collection) collectionClass.getConstructor().newInstance();
                 for (int i = 0; i < size; i++) {
                     Object item = ValueSerializer.getInstance().deserialize(input);
                     collection.add(item);
                 }
+                return collection;
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 throw new SerializationException("Cannot create Collection instance of class: " + collectionClass.getName());
             }
-            return collection;
         }
     }
 
     private static class MapSerializer implements ISerializer<Map> {
 
         @Override
-        public void serialize(Map value, OutputStream output) throws IOException, SerializationException {
-
+        public void serialize(Map map, OutputStream output) throws IOException, SerializationException {
+            output.write(map.size());
+            ClassSerializer.getInstance().serialize(map.getClass(), output);
+            Iterator<Map.Entry> iterator = map.entrySet().iterator();
+            ValueSerializer valueSerializer = ValueSerializer.getInstance();
+            while (iterator.hasNext()) {
+                Map.Entry entry = iterator.next();
+                valueSerializer.serialize(entry.getKey(), output);
+                valueSerializer.serialize(entry.getValue(), output);
+            }
         }
 
         @Override
         public Map deserialize(InputStream input) throws IOException, SerializationException {
-            return null;
+            int size = input.read();
+            Class mapClass = ClassSerializer.getInstance().deserialize(input);
+            try {
+                Map map = (Map) mapClass.getConstructor().newInstance();
+                ValueSerializer valueSerializer = ValueSerializer.getInstance();
+                for (int i = 0; i < size; i++) {
+                    Object key = valueSerializer.deserialize(input);
+                    Object value = valueSerializer.deserialize(input);
+                    map.put(key, value);
+                }
+                return map;
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                throw new SerializationException("Cannot create Map instance of class: " + mapClass.getName());
+            }
         }
     }
 }
