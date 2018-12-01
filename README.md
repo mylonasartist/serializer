@@ -19,8 +19,6 @@ Object -> Class [ Field[] ] [ Field[] foreach superclass ... until currentSuperc
 
 Class -> name:String version:long
 
-String -> lengthBytes:int value(UTF-8)
-
 Field -> Value
 
 Value -> isNull:int [type:ValueType Object | Array | Collection | Map | String | Byte | Short | Integer | Long | Float | Double | Boolean | BigDecimal | BigInteger | Date]
