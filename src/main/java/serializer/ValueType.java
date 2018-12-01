@@ -1,0 +1,5 @@
+package serializer;
+
+public enum ValueType {
+    OBJECT, ARRAY, STRING, BYTE, SHORT, INTEGER, LONG, FLOAT, DOUBLE, BOOLEAN, BIGDECIMAL, BIGINTEGER, DATE
+}
