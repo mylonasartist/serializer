@@ -101,12 +101,12 @@ class ObjectSerializer implements ISerializer<Object> {
         Arrays.sort(fields, Comparator.comparing(Field::getName));
         if (fields != null) {
             for (int i = 0; i < fields.length; i++) {
-                deserializeField(obj, clazz, input, fields[i]);
+                deserializeField(obj, clazz, fields[i], input);
             }
         }
     }
 
-    private void deserializeField(Object obj, Class clazz, InputStream input, Field field)
+    private void deserializeField(Object obj, Class clazz, Field field, InputStream input)
             throws IOException, SerializationException {
         String fieldName = field.getName();
         Object value = ValueSerializer.getInstance().deserialize(input);
