@@ -83,4 +83,10 @@ public class ObjectSerializerTest {
         NoDefaultConstructor obj = new NoDefaultConstructor(15);
         testObjectSerialization(obj);
     }
+
+    @Test
+    public void testStringSerialization() {
+        String obj = "Hello, World!";
+        testObjectSerialization(obj);
+    }
 }
