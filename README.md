@@ -25,10 +25,6 @@ Class -> name:String version:long
 
 Field -> Value
 
-Value -> isNull:int [type:ValueType Object | Array | Collection | Map | String | Byte | Short | Integer | Long | Float | Double | Boolean | BigDecimal | BigInteger | Date]
-
-ValueType -> OBJECT | ARRAY | COLLECTION | MAP | STRING | BYTE | SHORT | INTEGER | LONG | FLOAT | DOUBLE | BOOLEAN | BIGDECIMAL | BIGINTEGER | DATE
-
 Array -> length:int Class [ Value[] ]
 
 Collection -> size:int Class [ Value[] ]
