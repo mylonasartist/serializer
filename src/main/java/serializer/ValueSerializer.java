@@ -45,8 +45,6 @@ public class ValueSerializer implements ISerializer<Object> {
         valueTypesMap.put(BigDecimal.class, ValueType.BIGDECIMAL);
         valueTypesMap.put(BigInteger.class, ValueType.BIGINTEGER);
 
-        // TODO add more primitive and wrapper types to valueTypesMap
-
         valueTypesMap.forEach((aClass, valueType) -> classToValueTypesMap.put(valueType, aClass));
     }
 

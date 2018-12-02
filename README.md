@@ -34,8 +34,7 @@ Map -> size:int Class [ MapEntry[] ]
 MapEntry -> Value Value
 
 **TODO:**
-- Resolve all TODOs
-- Provide support of multidimensional arrays.
+- Provide serialization of multidimensional arrays.
 
 **!!! Warning:** the implementation uses recursion - StackOverflowError possible on too deep nesting
     as well as on circular references.
