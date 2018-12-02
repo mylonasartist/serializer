@@ -70,4 +70,17 @@ public class ObjectSerializerTest {
         BigInteger obj = new BigInteger("12391293921");
         testObjectSerialization(obj);
     }
+
+    @Test
+    public void testPrivateConstructor() {
+        PrivateConstructor obj = PrivateConstructor.createInstance();
+        obj.n = 150;
+        testObjectSerialization(obj);
+    }
+
+    @Test
+    public void testNoDefaultConstructor() {
+        NoDefaultConstructor obj = new NoDefaultConstructor(15);
+        testObjectSerialization(obj);
+    }
 }
