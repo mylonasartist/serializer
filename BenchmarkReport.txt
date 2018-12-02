@@ -1,0 +1,40 @@
+Benchmark report comparing MySerializer, Jackson and Kryo.
+
+
+Benchmark                                                                (iterations)    Mode     Cnt      Score      Error  Units
+SerializerBenchmark.benchmarkJackson                                               10   thrpt      20    381.679 ±   57.296  ops/s
+SerializerBenchmark.benchmarkKryo                                                  10   thrpt      20  16560.660 ± 1107.382  ops/s
+SerializerBenchmark.benchmarkMySerializer                                          10   thrpt      20   2699.913 ±  404.761  ops/s
+SerializerBenchmark.benchmarkJackson                                               10    avgt      20      0.003 ±    0.001   s/op
+SerializerBenchmark.benchmarkKryo                                                  10    avgt      20     ≈ 10⁻⁴              s/op
+SerializerBenchmark.benchmarkMySerializer                                          10    avgt      20      0.001 ±    0.001   s/op
+SerializerBenchmark.benchmarkJackson                                               10  sample    6538      0.003 ±    0.001   s/op
+SerializerBenchmark.benchmarkJackson:benchmarkJackson·p0.00                        10  sample              0.002              s/op
+SerializerBenchmark.benchmarkJackson:benchmarkJackson·p0.50                        10  sample              0.003              s/op
+SerializerBenchmark.benchmarkJackson:benchmarkJackson·p0.90                        10  sample              0.004              s/op
+SerializerBenchmark.benchmarkJackson:benchmarkJackson·p0.95                        10  sample              0.005              s/op
+SerializerBenchmark.benchmarkJackson:benchmarkJackson·p0.99                        10  sample              0.007              s/op
+SerializerBenchmark.benchmarkJackson:benchmarkJackson·p0.999                       10  sample              0.017              s/op
+SerializerBenchmark.benchmarkJackson:benchmarkJackson·p0.9999                      10  sample              0.023              s/op
+SerializerBenchmark.benchmarkJackson:benchmarkJackson·p1.00                        10  sample              0.023              s/op
+SerializerBenchmark.benchmarkKryo                                                  10  sample  233875     ≈ 10⁻⁴              s/op
+SerializerBenchmark.benchmarkKryo:benchmarkKryo·p0.00                              10  sample             ≈ 10⁻⁴              s/op
+SerializerBenchmark.benchmarkKryo:benchmarkKryo·p0.50                              10  sample             ≈ 10⁻⁴              s/op
+SerializerBenchmark.benchmarkKryo:benchmarkKryo·p0.90                              10  sample             ≈ 10⁻⁴              s/op
+SerializerBenchmark.benchmarkKryo:benchmarkKryo·p0.95                              10  sample             ≈ 10⁻⁴              s/op
+SerializerBenchmark.benchmarkKryo:benchmarkKryo·p0.99                              10  sample             ≈ 10⁻³              s/op
+SerializerBenchmark.benchmarkKryo:benchmarkKryo·p0.999                             10  sample              0.002              s/op
+SerializerBenchmark.benchmarkKryo:benchmarkKryo·p0.9999                            10  sample              0.004              s/op
+SerializerBenchmark.benchmarkKryo:benchmarkKryo·p1.00                              10  sample              0.008              s/op
+SerializerBenchmark.benchmarkMySerializer                                          10  sample   41438     ≈ 10⁻³              s/op
+SerializerBenchmark.benchmarkMySerializer:benchmarkMySerializer·p0.00              10  sample             ≈ 10⁻⁴              s/op
+SerializerBenchmark.benchmarkMySerializer:benchmarkMySerializer·p0.50              10  sample             ≈ 10⁻³              s/op
+SerializerBenchmark.benchmarkMySerializer:benchmarkMySerializer·p0.90              10  sample              0.001              s/op
+SerializerBenchmark.benchmarkMySerializer:benchmarkMySerializer·p0.95              10  sample              0.001              s/op
+SerializerBenchmark.benchmarkMySerializer:benchmarkMySerializer·p0.99              10  sample              0.002              s/op
+SerializerBenchmark.benchmarkMySerializer:benchmarkMySerializer·p0.999             10  sample              0.007              s/op
+SerializerBenchmark.benchmarkMySerializer:benchmarkMySerializer·p0.9999            10  sample              0.029              s/op
+SerializerBenchmark.benchmarkMySerializer:benchmarkMySerializer·p1.00              10  sample              0.034              s/op
+SerializerBenchmark.benchmarkJackson                                               10      ss              0.620              s/op
+SerializerBenchmark.benchmarkKryo                                                  10      ss              0.073              s/op
+SerializerBenchmark.benchmarkMySerializer                                          10      ss              0.034              s/op
